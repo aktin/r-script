@@ -1,0 +1,50 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<name>AKTIN : DWH Query : R Script</name>
+	<packaging>jar</packaging>
+
+	<groupId>org.aktin</groupId>
+	<artifactId>r-script</artifactId>
+	<version>0.6-SNAPSHOT</version>
+
+	<description>
+		Execute R scripts on AKTIN data
+		to generate aggregated results and
+		visualisations
+	</description>
+	
+	
+	<parent>
+		<groupId>org.aktin</groupId>
+		<artifactId>dwh-query</artifactId>
+		<version>0.6-SNAPSHOT</version>
+	</parent>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.1.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>test-jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>org.aktin</groupId>
+			<artifactId>dwh-api</artifactId>
+			<version>0.4-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+	</dependencies>
+</project>
