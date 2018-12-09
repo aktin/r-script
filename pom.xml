@@ -5,7 +5,7 @@
 
 	<groupId>org.aktin</groupId>
 	<artifactId>r-script</artifactId>
-	<version>0.6rc2-SNAPSHOT</version>
+	<version>0.6rc2</version>
 
 	<description>
 		Execute R scripts on AKTIN data
@@ -17,7 +17,7 @@
 	<parent>
 		<groupId>org.aktin</groupId>
 		<artifactId>dwh-query</artifactId>
-		<version>0.6rc2-SNAPSHOT</version>
+		<version>0.6rc2</version>
 	</parent>
 
 	<build>
