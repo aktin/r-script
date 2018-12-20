@@ -7,10 +7,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.FileSystem;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
@@ -32,25 +30,25 @@ public class RScript {
 	/** executable path of the Rscript command */
 	private Path rScriptExecutable;
 
-	/**
-	 * Constructs the class. Locates the Rscript executable and verifies that
-	 * all dependencies are available.
-	 */
-	public RScript() {
-		// TODO this works only for testing on windows not for deployment
-		if (System.getProperty("os.name").substring(0, 7).equals("Windows")) { // hoping
-																				// this
-																				// will
-																				// work
-																				// on
-																				// every
-																				// Windows
-																				// Version
-			FileSystem fs = FileSystems.getDefault();
-			this.rScriptExecutable = fs.getPath("C:/Program Files/R/R-3.2.4revised/bin/Rscript.exe");
-			// System.out.println(rScriptExecutable.toString());
-		}
-	}
+//	/**
+//	 * Constructs the class. Locates the Rscript executable and verifies that
+//	 * all dependencies are available.
+//	 */
+//	public RScript() {
+//		// TODO this works only for testing on windows not for deployment
+//		if (System.getProperty("os.name").substring(0, 7).equals("Windows")) { // hoping
+//																				// this
+//																				// will
+//																				// work
+//																				// on
+//																				// every
+//																				// Windows
+//																				// Version
+//			FileSystem fs = FileSystems.getDefault();
+//			this.rScriptExecutable = fs.getPath("C:/Program Files/R/R-3.2.4revised/bin/Rscript.exe");
+//			// System.out.println(rScriptExecutable.toString());
+//		}
+//	}
 
 	public RScript(Path executable) {
 		this.rScriptExecutable = executable;
@@ -135,9 +133,6 @@ public class RScript {
 		// read output stream
 		
 		output.close();
-
-		// TODO run, check output, clean up, etc.
-		// throw new UnsupportedOperationException("TODO implement");
 	}
 
 	// debugging only
