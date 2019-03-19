@@ -1,15 +1,22 @@
 package org.aktin.scripting.r;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -80,10 +87,80 @@ public class RScript {
 		}
 		output.close();
 		error.close();
+		try {
+			Files.delete(temp);			
+		}catch( IOException e ) {
+			log.log(Level.WARNING, "Unable to delete temp directory "+temp, e);
+		}
 		if( exitCode != 0 ) {
 			throw new IOException("Non-zero exit code");
 		}
 		return  value;
+	}
+
+	private static final String RSCRIPT_OUTPUT_PACKAGE_VERSIONS="write.table(x=subset(x=data.frame(installed.packages(noCache=TRUE)),select=Version,is.na(Priority) | Priority != 'base' | Package=='base'),quote=FALSE,sep='\\t',col.names=FALSE,file='versions.txt')";
+	private static final String VERSIONS_SCRIPT_NAME = "versions.R";
+
+	public Map<String, String> getPackageVersions() throws IOException{
+		ProcessBuilder pb = new ProcessBuilder(rScriptExecutable.toString(), "--vanilla", VERSIONS_SCRIPT_NAME);
+		Path temp = Files.createTempDirectory("r-version");
+		Path source = temp.resolve(VERSIONS_SCRIPT_NAME);
+		try( BufferedWriter w = Files.newBufferedWriter(source,StandardOpenOption.CREATE_NEW) ){
+			w.write(RSCRIPT_OUTPUT_PACKAGE_VERSIONS);
+		}
+		pb.directory(temp.toFile());
+		Process process = pb.start();
+		int exitCode;
+		try {
+			if( !process.waitFor(2000, TimeUnit.MILLISECONDS) ) {
+				// process did not terminate within the specified time
+				process.destroyForcibly();
+				throw new IOException("R process did not terminate in the specified time");
+			}else {
+				exitCode = process.exitValue();
+			}
+		} catch (InterruptedException e) {
+			throw new IOException("Interrupted during R execution", e);
+		}
+		
+		InputStream output = process.getInputStream();
+		InputStream error = process.getErrorStream();
+		String value = convertStreamToString(error);
+		if( value == null || value.length() == 0 ) {
+			// use stdout
+			value = convertStreamToString(output);
+		}
+		output.close();
+		error.close();
+		Map<String, String> map = null;
+		if( exitCode == 0 ) {
+			// read versions output
+			Path versionTable = temp.resolve("versions.txt");
+			try( BufferedReader rd = Files.newBufferedReader(versionTable) ){
+				map = new HashMap<String,String>();
+				String line;
+				while( (line = rd.readLine()) != null ) {
+					int t = line.indexOf('\t');
+					if( t == -1 ){
+						continue;
+					}
+					map.put(line.substring(0, t), line.substring(t+1, line.length()));
+				}
+			}
+			Files.delete(versionTable);
+		}
+		try {
+			Files.delete(source);
+			Files.delete(temp);			
+		}catch( IOException e ) {
+			log.log(Level.WARNING, "Unable to delete temp directory "+temp, e);
+		}
+		if( exitCode != 0 ) {
+			log.warning("R stderr: "+value);
+			throw new IOException("Non-zero exit code "+exitCode);
+		}
+		return map;
+		
 	}
 	// TODO configure timeout milliseconds to wait for process to exit
 	public void runRscript(Path workingDir, String mainScript) throws IOException {

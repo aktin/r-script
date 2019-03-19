@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
 
 import org.aktin.dwh.PreferenceKey;
 import org.junit.Assert;
@@ -42,13 +43,20 @@ public class TestRScript {
 	}
 
 	@Test
-	public void testRetrieveVersion() throws IOException {
+	public void testRetrieveVersions() throws IOException {
 		Path p = findR();
 		RScript r = new RScript(p);
 		String version = r.getVersion();
 		Assert.assertNotNull(version);
 		Assert.assertNotEquals("", version);
 		System.out.println("R --version output: "+version);
+		Map<String, String> packages = r.getPackageVersions();
+
+		String baseVersion = packages.get("base");
+		Assert.assertNotNull(baseVersion);
+		// base version should be part of the version string
+		Assert.assertTrue(version.indexOf(baseVersion) != -1);
+		packages.forEach( (k,v) -> System.out.println("R package "+k+": "+v) );
 	}
 
 }
