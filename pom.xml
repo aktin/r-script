@@ -16,8 +16,8 @@
 	
 	<parent>
 		<groupId>org.aktin</groupId>
-		<artifactId>dwh-query</artifactId>
-		<version>0.7-SNAPSHOT</version>
+		<artifactId>aktin</artifactId>
+		<version>0.8</version>
 	</parent>
 
 	<build>
@@ -41,6 +41,7 @@
 			<groupId>org.aktin</groupId>
 			<artifactId>dwh-api</artifactId>
 			<version>0.4</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
