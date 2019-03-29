@@ -5,7 +5,7 @@
 
 	<groupId>org.aktin</groupId>
 	<artifactId>r-script</artifactId>
-	<version>0.7-SNAPSHOT</version>
+	<version>1.0</version>
 
 	<description>
 		Execute R scripts on AKTIN data
@@ -48,4 +48,8 @@
 			<artifactId>junit</artifactId>
 		</dependency>
 	</dependencies>
+
+  <scm>
+    <tag>v1.0</tag>
+  </scm>
 </project>
