@@ -14,6 +14,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -160,13 +161,32 @@ public class RScript {
 		return map;
 		
 	}
-	// TODO configure timeout milliseconds to wait for process to exit
-	public void runRscript(Path workingDir, String mainScript) throws IOException {
-		// log.info("RScript Start");
-		// log.info(mainScript.toString());
-		// log.info(workingDir.toString());
-		// log.info(workingDir.resolve(mainScript).toString());
-		// log.info(rScriptExecutable.toString());
+
+	private <E extends Exception> void destroyForciblyWaitAndThrow(Process process, E e) throws E {
+		Process waiter = process.destroyForcibly();
+		boolean finished = false;
+		try {
+			finished = waiter.waitFor(700, TimeUnit.MILLISECONDS);
+		} catch (InterruptedException e1) {
+			e.addSuppressed(e1);
+		}
+		if( finished == false ) {
+			log.warning("Unable to destroy the process forcibly in the specified time");
+		}
+		throw e;
+	}
+	/**
+	 * Run the Rscript executable. Working directory will be set as specified in the arguments,
+	 * as well as the main script.
+	 * @param workingDir Working directory for the Rscript executable. It must contain at least the file specified in the next argument.
+	 * @param mainScript File name for the main script to be executed in the working directory. The directory must contain the specified file name.
+	 * @param waitMillis Time to wait for the process to finish. If {@code null} the process will wait without limit.
+	 * @throws IOException IO error, e.g. with processing the process' output
+	 * @throws TimeoutException the specified timeout elapsed before the process exited
+	 * @throws AbnormalTerminationException  process terminated abnormally. the provided script did not execute successfully.
+	 *   For exit code and STDERR output see {@link AbnormalTerminationException}.
+	 */
+	public void runRscript(Path workingDir, String mainScript, Integer waitMillis) throws IOException, TimeoutException, AbnormalTerminationException {
 		ProcessBuilder pb = new ProcessBuilder(rScriptExecutable.toString(), "--vanilla", mainScript);
 		pb.directory(workingDir.toFile());
 
@@ -177,28 +197,33 @@ public class RScript {
 		// get the output stream of the process and print it
 		InputStream output = process.getInputStream();
 
-		int exitCode;
-		try {
-			exitCode = process.waitFor();
+		int exitCode = -1;
+		try { 
+			if( waitMillis != null ) {
+				boolean finished = process.waitFor(waitMillis.intValue(), TimeUnit.MILLISECONDS);
+				if( finished  == true ) {
+					// process finished, get exit value
+					exitCode = process.exitValue();
+				}else {
+					log.warning("Process did not finish in the specified time, trying to kill it..");
+					// timeout elapsed. Kill process
+					destroyForciblyWaitAndThrow(process, new TimeoutException("Timeout elapsed for Rscript execution"));
+				}
+			}else{
+				// wait without timeout
+				exitCode = process.waitFor();
+			}
 		} catch (InterruptedException e) {
-			throw new IOException("Interrupted during R execution", e);
+			destroyForciblyWaitAndThrow(process, new IOException("Interrupted during R execution", e));
 		}
 		if( exitCode != 0 ){
 			// Rscript did not terminate successfully
 			// something went wrong
+			String stderr = null;
 			if (error.available() > 0) {
-				String stderr = convertStreamToString(error);
-				log.warning("Rscript stderr: "+stderr);
-				// use first line of output for exception
-				int nl = stderr.indexOf('\n'); // find first newline
-				if( nl != -1 ){ // if there, reduce to first line
-					stderr = stderr.substring(0, nl).trim();
-				}
-				// TODO use maximum of newline or first 250 characters
-				throw new IOException("R execution failed w/ exit code "+exitCode+": "+stderr);
-			}else{
-				throw new IOException("R execution failed w/ exit code "+exitCode+", no stderr");
+				stderr = convertStreamToString(error);
 			}
+			throw new AbnormalTerminationException(exitCode, stderr);
 		}
 		error.close();
 

@@ -1,10 +1,13 @@
 package org.aktin.scripting.r;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Map;
+import java.util.concurrent.TimeoutException;
 
 import org.aktin.dwh.PreferenceKey;
 import org.junit.Assert;
@@ -58,5 +61,60 @@ public class TestRScript {
 		Assert.assertTrue(version.indexOf(baseVersion) != -1);
 		packages.forEach( (k,v) -> System.out.println("R package "+k+": "+v) );
 	}
+	
+	@Test
+	public void verifyExecutionTimeout() throws IOException {
+		Path p = findR();
+		RScript r = new RScript(p);
+		
+		Path dir = Files.createTempDirectory("r-script-test");
+		Path script = dir.resolve("main.R");
+		try( BufferedWriter w = Files.newBufferedWriter(script, StandardOpenOption.CREATE_NEW) ){
+			w.write("Sys.sleep(10)\n");
+		}
+		// verify that we don't need to wait for the process to exit
+		long start = System.currentTimeMillis();
+		try {
+			r.runRscript(dir, script.getFileName().toString(), 1000);
+			Assert.fail("Process should not have been termianted regularly");
+		} catch (TimeoutException e) {
+			// this is what we expect!
+			// fall through to outside of try
+		} catch (AbnormalTerminationException e) {
+			Assert.fail();
+		}
+		long elapsed = System.currentTimeMillis() - start;
+		// remove directories
+		try{
+			Files.delete(script);
+			Files.delete(dir);
+		}catch( IOException e ) {
+			System.err.println("Unable to delete temporary script because process is still alive");
+		}
+		// verify early termination
+		Assert.assertTrue("Process should be terminated earlier", elapsed < 3000);
+	}
 
+	@Test
+	public void verifyAbnormalTerminationStderr() throws IOException {
+		Path p = findR();
+		RScript r = new RScript(p);
+		
+		Path dir = Files.createTempDirectory("r-script-test");
+		Path script = dir.resolve("main.R");
+		try( BufferedWriter w = Files.newBufferedWriter(script, StandardOpenOption.CREATE_NEW) ){
+			w.write("this.function.does.no.exist()\n");
+		}
+		try {
+			r.runRscript(dir, script.getFileName().toString(), 1000);
+			Assert.fail("Process should not have been termianted regularly");
+		} catch (TimeoutException e) {
+			// no timeout expected
+			Assert.fail();
+		} catch (AbnormalTerminationException e) {
+			// this is what we want!
+			Assert.assertEquals(1, e.getExitCode());
+			Assert.assertTrue(e.getErrorOutput().startsWith("Error: could not find function \"this.function.does.no.exist\""));
+		}
+	}
 }
