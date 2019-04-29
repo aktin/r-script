@@ -17,7 +17,7 @@
 	<parent>
 		<groupId>org.aktin</groupId>
 		<artifactId>aktin</artifactId>
-		<version>0.8</version>
+		<version>0.9</version>
 	</parent>
 
 	<scm>
