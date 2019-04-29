@@ -114,7 +114,8 @@ public class TestRScript {
 		} catch (AbnormalTerminationException e) {
 			// this is what we want!
 			Assert.assertEquals(1, e.getExitCode());
-			Assert.assertTrue(e.getErrorOutput().startsWith("Error: could not find function \"this.function.does.no.exist\""));
+			String eout = e.getErrorOutput();
+			Assert.assertTrue("Unexpected R stderr "+eout,eout.contains("\"this.function.does.no.exist\""));
 		}
 	}
 }
