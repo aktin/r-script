@@ -19,11 +19,33 @@
 		<artifactId>aktin</artifactId>
 		<version>0.9</version>
 	</parent>
-
 	<scm>
+		<connection>scm:git:git@github.com:aktin/r-script.git</connection>
 		<developerConnection>scm:git:git@github.com:aktin/r-script.git</developerConnection>
 		<tag>HEAD</tag>
+		<url>https://github.com/aktin/r-script</url>
 	</scm>
+	<distributionManagement>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+		</repository>
+	</distributionManagement>
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+			<comments>A business-friendly OSS license</comments>
+		</license>
+	</licenses>
+	<repositories>
+		<repository>
+			<id>aktin-repo</id>
+			<name>AKTIN.org</name>
+			<url>http://aktin.org/software/repo/</url>
+		</repository>
+	</repositories>
 
 
 	<build>
