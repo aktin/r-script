@@ -5,7 +5,7 @@
 
 	<groupId>org.aktin</groupId>
 	<artifactId>r-script</artifactId>
-	<version>1.2</version>
+	<version>1.2-SNAPSHOT</version>
 
 	<description>
 		Execute R scripts on AKTIN data
@@ -22,7 +22,7 @@
 	<scm>
 		<connection>scm:git:git@github.com:aktin/r-script.git</connection>
 		<developerConnection>scm:git:git@github.com:aktin/r-script.git</developerConnection>
-		<tag>v1.2</tag>
+		<tag>HEAD</tag>
 		<url>https://github.com/aktin/r-script</url>
 	</scm>
 	<licenses>
