@@ -19,12 +19,35 @@
 		<artifactId>aktin</artifactId>
 		<version>0.9</version>
 	</parent>
+
+	<inceptionYear>2014</inceptionYear>
+	<organization>
+		<name>Uniklinik RWTH Aachen</name>
+		<url>https://www.ukaachen.de/kliniken-institute/institut-fuer-medizinische-informatik/</url>
+	</organization>
+	<developers>
+		<developer>
+			<name>R.W.Majeed</name>
+			<email>rmajeed (a) ukaachen.de</email>
+		</developer>
+		<!-- ... -->
+	</developers>
+
+
 	<scm>
 		<connection>scm:git:git@github.com:aktin/r-script.git</connection>
 		<developerConnection>scm:git:git@github.com:aktin/r-script.git</developerConnection>
 		<tag>HEAD</tag>
 		<url>https://github.com/aktin/r-script</url>
 	</scm>
+
+	<distributionManagement>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+		</repository>
+	</distributionManagement>
+
 	<licenses>
 		<license>
 			<name>Apache License, Version 2.0</name>
