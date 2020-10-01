@@ -21,7 +21,8 @@ public class TestRScript {
 			"C:\\Program Files\\R\\R-3.2.0\\bin\\Rscript.exe",
 			"C:\\Program Files\\R\\R-3.4.0\\bin\\Rscript.exe",
 			"C:\\Program Files\\R\\R-3.6.1\\bin\\Rscript.exe",
-			"C:\\Program Files\\R\\R-3.5.1\\bin\\Rscript.exe"
+			"C:\\Program Files\\R\\R-3.5.1\\bin\\Rscript.exe",
+			"C:\\Program Files\\R\\R-4.0.0\\bin\\Rscript.exe"
 			// TODO add search paths for compilation on Linux
 	};
 	public static Path findR(){
@@ -42,7 +43,7 @@ public class TestRScript {
 				return p;
 			}
 		}
-		Assert.fail("Path to Rscript not found. Please edit TestReportGeneration.java or define a (local) system property: "+PreferenceKey.rScriptBinary.key());
+		Assert.fail("Path to Rscript not found. Please edit "+TestRScript.class.getName()+".java or define a (local) system property: "+PreferenceKey.rScriptBinary.key());
 		return null;
 	}
 
