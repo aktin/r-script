@@ -111,7 +111,7 @@ public class RScript {
 		Process process = pb.start();
 		int exitCode;
 		try {
-			if( !process.waitFor(2000, TimeUnit.MILLISECONDS) ) {
+			if( !process.waitFor(10, TimeUnit.SECONDS) ) {
 				// process did not terminate within the specified time
 				process.destroyForcibly();
 				throw new IOException("R process did not terminate in the specified time");
