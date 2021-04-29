@@ -38,7 +38,7 @@
 		<connection>scm:git:git@github.com:aktin/r-script.git</connection>
 		<developerConnection>scm:git:git@github.com:aktin/r-script.git</developerConnection>
 		<tag>HEAD</tag>
-		<url>https://github.com/aktin/r-script.git</url>
+		<url>https://github.com/aktin/r-script</url>
 	</scm>
 
 	<distributionManagement>
