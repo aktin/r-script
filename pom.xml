@@ -5,7 +5,7 @@
 
 	<groupId>org.aktin</groupId>
 	<artifactId>r-script</artifactId>
-	<version>1.4-SNAPSHOT</version>
+	<version>1.4</version>
 
 	<description>
 		Execute R scripts on AKTIN data
@@ -37,7 +37,7 @@
 	<scm>
 		<connection>scm:git:git@github.com:aktin/r-script.git</connection>
 		<developerConnection>scm:git:git@github.com:aktin/r-script.git</developerConnection>
-		<tag>HEAD</tag>
+		<tag>v1.4</tag>
 		<url>https://github.com/aktin/r-script.git</url>
 	</scm>
 
@@ -85,7 +85,7 @@
 		<dependency>
 			<groupId>org.aktin</groupId>
 			<artifactId>dwh-api</artifactId>
-			<version>0.7-SNAPSHOT</version>
+			<version>0.7</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
