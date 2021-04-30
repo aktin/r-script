@@ -100,6 +100,8 @@ public class RScript {
 	private static final String RSCRIPT_OUTPUT_PACKAGE_VERSIONS="write.table(x=subset(x=data.frame(installed.packages(noCache=TRUE)),select=Version,is.na(Priority) | Priority != 'base' | Package=='base'),quote=FALSE,sep='\\t',col.names=FALSE,file='versions.txt')";
 	private static final String VERSIONS_SCRIPT_NAME = "versions.R";
 
+	// TODO change to asynchronous implementation via process.onExit
+	// method should then return a CompletableFuture<Map<String,String>>
 	public Map<String, String> getPackageVersions() throws IOException{
 		ProcessBuilder pb = new ProcessBuilder(rScriptExecutable.toString(), "--vanilla", VERSIONS_SCRIPT_NAME);
 		Path temp = Files.createTempDirectory("r-version");
@@ -159,7 +161,6 @@ public class RScript {
 			throw new IOException("Non-zero exit code "+exitCode);
 		}
 		return map;
-		
 	}
 
 	private <E extends Exception> void destroyForciblyWaitAndThrow(Process process, E e) throws E {
