@@ -19,6 +19,9 @@
 		<artifactId>aktin</artifactId>
 		<version>0.11</version>
 	</parent>
+	<properties>
+		<project.scm.id>github.com</project.scm.id>
+	</properties>
 
 	<inceptionYear>2014</inceptionYear>
 	<organization>
