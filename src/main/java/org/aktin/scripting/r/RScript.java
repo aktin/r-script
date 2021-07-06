@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  * to files in the working directory. The script should not output anything on
  * stdout or stderr. Any output on stdout is treated as warnings, any output on
  * stderr is treated as error messages.
- * 
+ *
  * @author R.W.Majeed
  *
  */
@@ -87,7 +87,7 @@ public class RScript {
 		output.close();
 		error.close();
 		try {
-			Files.delete(temp);			
+			Files.delete(temp);
 		}catch( IOException e ) {
 			log.log(Level.WARNING, "Unable to delete temp directory "+temp, e);
 		}
@@ -123,7 +123,7 @@ public class RScript {
 		} catch (InterruptedException e) {
 			throw new IOException("Interrupted during R execution", e);
 		}
-		
+
 		InputStream output = process.getInputStream();
 		InputStream error = process.getErrorStream();
 		String value = convertStreamToString(error);
@@ -152,7 +152,7 @@ public class RScript {
 		}
 		try {
 			Files.delete(source);
-			Files.delete(temp);			
+			Files.delete(temp);
 		}catch( IOException e ) {
 			log.log(Level.WARNING, "Unable to delete temp directory "+temp, e);
 		}
@@ -187,19 +187,21 @@ public class RScript {
 	 * @throws AbnormalTerminationException  process terminated abnormally. the provided script did not execute successfully.
 	 *   For exit code and STDERR output see {@link AbnormalTerminationException}.
 	 */
-	public void runRscript(Path workingDir, String mainScript, Integer waitMillis) throws IOException, TimeoutException, AbnormalTerminationException {
+	public void runRscript(Path workingDir, String mainScript, Integer waitMillis, boolean debugging) throws IOException, TimeoutException, AbnormalTerminationException {
 		ProcessBuilder pb = new ProcessBuilder(rScriptExecutable.toString(), "--vanilla", mainScript);
 		pb.directory(workingDir.toFile());
+
+		if(debugging)
+			log.info(pb.command().toString());
 
 		Process process = pb.start();
 		// get the error stream of the process and print it
 		InputStream error = process.getErrorStream();
-
 		// get the output stream of the process and print it
 		InputStream output = process.getInputStream();
 
 		int exitCode = -1;
-		try { 
+		try {
 			if( waitMillis != null ) {
 				boolean finished = process.waitFor(waitMillis.intValue(), TimeUnit.MILLISECONDS);
 				if( finished  == true ) {
@@ -224,7 +226,7 @@ public class RScript {
 			if (error.available() > 0) {
 				stderr = convertStreamToString(error);
 			}
-			throw new AbnormalTerminationException(exitCode, stderr);
+			throw new AbnormalTerminationException(exitCode, stderr, debugging);
 		}
 		error.close();
 
@@ -232,7 +234,7 @@ public class RScript {
 			log.warning("non-empty R stdout: "+convertStreamToString(output));
 		}
 		// read output stream
-		
+
 		output.close();
 	}
 
