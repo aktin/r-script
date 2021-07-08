@@ -79,7 +79,8 @@ public class TestRScript {
 		// verify that we don't need to wait for the process to exit
 		long start = System.currentTimeMillis();
 		try {
-			r.runRscript(dir, script.getFileName().toString(), 1000, true);
+			r.setDebugPrintMode(true);
+			r.runRscript(dir, script.getFileName().toString(), 1000);
 			Assert.fail("Process should not have been termianted regularly");
 		} catch (TimeoutException e) {
 			// this is what we expect!
@@ -110,7 +111,7 @@ public class TestRScript {
 			w.write("this.function.does.no.exist()\n");
 		}
 		try {
-			r.runRscript(dir, script.getFileName().toString(), 1000, false);
+			r.runRscript(dir, script.getFileName().toString(), null);
 			Assert.fail("Process should not have been termianted regularly");
 		} catch (TimeoutException e) {
 			// no timeout expected
@@ -119,7 +120,7 @@ public class TestRScript {
 			// this is what we want!
 			Assert.assertEquals(1, e.getExitCode());
 			String eout = e.getErrorOutput();
-			Assert.assertTrue("Unexpected R stderr "+eout,eout.contains("\"this.function.does.no.exist\""));
+			Assert.assertTrue(eout.contains("this.function.does.no.exist"));
 		}
 	}
 }

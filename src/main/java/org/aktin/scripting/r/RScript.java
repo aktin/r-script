@@ -36,6 +36,8 @@ public class RScript {
 	/** executable path of the Rscript command */
 	private Path rScriptExecutable;
 
+	private boolean isDebugPrintMode = false;
+
 //	/**
 //	 * Constructs the class. Locates the Rscript executable and verifies that
 //	 * all dependencies are available.
@@ -187,12 +189,10 @@ public class RScript {
 	 * @throws AbnormalTerminationException  process terminated abnormally. the provided script did not execute successfully.
 	 *   For exit code and STDERR output see {@link AbnormalTerminationException}.
 	 */
-	public void runRscript(Path workingDir, String mainScript, Integer waitMillis, boolean debugging) throws IOException, TimeoutException, AbnormalTerminationException {
+	public void runRscript(Path workingDir, String mainScript, Integer waitMillis) throws IOException, TimeoutException, AbnormalTerminationException {
 		ProcessBuilder pb = new ProcessBuilder(rScriptExecutable.toString(), "--vanilla", mainScript);
 		pb.directory(workingDir.toFile());
-
-		if(debugging)
-			log.info(pb.command().toString());
+		log.info(pb.command().toString());
 
 		Process process = pb.start();
 		// get the error stream of the process and print it
@@ -203,8 +203,8 @@ public class RScript {
 		int exitCode = -1;
 		try {
 			if( waitMillis != null ) {
-				boolean finished = process.waitFor(waitMillis.intValue(), TimeUnit.MILLISECONDS);
-				if( finished  == true ) {
+				boolean finished = process.waitFor(waitMillis, TimeUnit.MILLISECONDS);
+				if(finished) {
 					// process finished, get exit value
 					exitCode = process.exitValue();
 				}else {
@@ -226,7 +226,7 @@ public class RScript {
 			if (error.available() > 0) {
 				stderr = convertStreamToString(error);
 			}
-			throw new AbnormalTerminationException(exitCode, stderr, debugging);
+			throw new AbnormalTerminationException(exitCode, stderr, isDebugPrintMode);
 		}
 		error.close();
 
@@ -262,4 +262,10 @@ public class RScript {
 		return "";
 	}
 
+	/**
+	 * Activate/Deactive printing full error log of AbnormalTerminationException
+	 */
+	public void setDebugPrintMode(boolean debugPrintMode) {
+		isDebugPrintMode = debugPrintMode;
+	}
 }

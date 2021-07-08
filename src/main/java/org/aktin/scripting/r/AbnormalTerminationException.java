@@ -14,17 +14,17 @@ public class AbnormalTerminationException extends Exception{
 	private String stderrOutput;
 
 	protected AbnormalTerminationException(int exitCode, String stderr, boolean debugging) {
-		super(firstLineOr250Characters(stderr, debugging));
 		this.exitCode = exitCode;
-		this.stderrOutput = stderr;
+		if(debugging)
+			this.stderrOutput = stderr;
 		// use first line of error output for exception message
+		else
+			this.stderrOutput = firstLineOr250Characters(stderr);
 	}
 
-	private static final String firstLineOr250Characters(String msg, boolean debugging) {
-		if(debugging)
-			return msg;
+	private static String firstLineOr250Characters(String msg) {
 		int eol = msg.indexOf('\n');
-		eol = Math.min((eol==-1)?msg.length():eol , 1000);
+		eol = Math.min((eol==-1)?msg.length():eol , 250);
 		return msg.substring(0, eol);
 	}
 	/**
