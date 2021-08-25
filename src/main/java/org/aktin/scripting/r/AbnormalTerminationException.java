@@ -23,10 +23,12 @@ public class AbnormalTerminationException extends Exception{
 	}
 
 	private static String firstLineOr250Characters(String msg) {
-		int eol = msg.indexOf('\n');
+		int eol = -1;//msg.indexOf('\n');
 		eol = Math.min((eol==-1)?msg.length():eol , 250);
-		return msg.substring(0, eol);
+		String excerpt = msg.substring(0, eol);
+		return excerpt.replace("\r","").replace("\n", "\\n");
 	}
+
 	/**
 	 * Get the process' exit code. Since it was terminated abnormally, the code should be non-zero.
 	 * @return exit code
