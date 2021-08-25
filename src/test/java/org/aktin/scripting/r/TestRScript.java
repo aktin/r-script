@@ -9,11 +9,12 @@ import java.nio.file.StandardOpenOption;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
-import org.aktin.dwh.PreferenceKey;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class TestRScript {
+	private static final String RSCRIPT_BINARY = "rscript.binary";
+	
 	static final String[] rPathSearch = {
 			"C:\\Program Files\\R\\R-3.3.1\\bin\\Rscript.exe",
 			"C:\\Program Files\\R\\R-3.2.2\\bin\\Rscript.exe",
@@ -30,11 +31,11 @@ public class TestRScript {
 	public static Path findR(){
 		// try system property 'rscript.binary'
 		Path p;
-		String path = System.getProperty(PreferenceKey.rScriptBinary.key());
+		String path = System.getProperty(RSCRIPT_BINARY);
 		if( path != null ){
 			p = Paths.get(path);
 			if( !Files.isExecutable(p) ){
-				Assert.fail("System property '"+PreferenceKey.rScriptBinary.key()+"' defined, but target not found/executable.");
+				Assert.fail("System property '"+RSCRIPT_BINARY+"' defined, but target not found/executable.");
 			}
 			return p;
 		}
@@ -45,7 +46,7 @@ public class TestRScript {
 				return p;
 			}
 		}
-		Assert.fail("Path to Rscript not found. Please edit "+TestRScript.class.getName()+".java or define a (local) system property: "+PreferenceKey.rScriptBinary.key());
+		Assert.fail("Path to Rscript not found. Please edit "+TestRScript.class.getName()+".java or define a (local) system property: "+RSCRIPT_BINARY);
 		return null;
 	}
 
