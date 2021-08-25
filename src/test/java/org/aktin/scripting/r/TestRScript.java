@@ -16,14 +16,13 @@ public class TestRScript {
 	private static final String RSCRIPT_BINARY = "rscript.binary";
 	
 	static final String[] rPathSearch = {
+			"C:\\Program Files\\R\\R-4.1.1\\bin\\Rscript.exe",
 			"C:\\Program Files\\R\\R-3.3.1\\bin\\Rscript.exe",
-			"C:\\Program Files\\R\\R-3.2.2\\bin\\Rscript.exe",
-			"C:\\Program Files\\R\\R-3.2.0\\bin\\x64\\Rscript.exe",
-			"C:\\Program Files\\R\\R-3.2.0\\bin\\Rscript.exe",
 			"C:\\Program Files\\R\\R-3.4.0\\bin\\Rscript.exe",
 			"C:\\Program Files\\R\\R-3.5.1\\bin\\Rscript.exe",
 			"C:\\Program Files\\R\\R-3.6.1\\bin\\Rscript.exe",
 			"C:\\Program Files\\R\\R-3.6.2\\bin\\Rscript.exe",
+			"C:\\Program Files\\R\\R-3.6.3\\bin\\Rscript.exe",
 			"C:\\Program Files\\R\\R-3.6.3\\bin\\Rscript.exe",
 			"C:\\Program Files\\R\\R-4.0.0\\bin\\Rscript.exe"
 			// TODO add search paths for compilation on Linux
@@ -105,7 +104,6 @@ public class TestRScript {
 	public void verifyAbnormalTerminationStderr() throws IOException {
 		Path p = findR();
 		RScript r = new RScript(p);
-		
 		Path dir = Files.createTempDirectory("r-script-test");
 		Path script = dir.resolve("main.R");
 		try( BufferedWriter w = Files.newBufferedWriter(script, StandardOpenOption.CREATE_NEW) ){
