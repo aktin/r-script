@@ -36,7 +36,6 @@
 		<!-- ... -->
 	</developers>
 
-
 	<scm>
 		<connection>scm:git:git@github.com:aktin/r-script.git</connection>
 		<developerConnection>scm:git:git@github.com:aktin/r-script.git</developerConnection>
@@ -63,7 +62,7 @@
 		<repository>
 			<id>aktin-repo</id>
 			<name>AKTIN.org</name>
-			<url>http://aktin.org/software/repo/</url>
+			<url>https://aktin.org/software/repo/</url>
 		</repository>
 	</repositories>
 
