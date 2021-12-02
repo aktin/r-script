@@ -5,7 +5,7 @@
 
 	<groupId>org.aktin</groupId>
 	<artifactId>r-script</artifactId>
-	<version>1.4.2-SNAPSHOT</version>
+	<version>1.5-SNAPSHOT</version>
 
 	<description>
 		Execute R scripts on AKTIN data
