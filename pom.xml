@@ -5,7 +5,7 @@
 
 	<groupId>org.aktin</groupId>
 	<artifactId>r-script</artifactId>
-	<version>1.5-SNAPSHOT</version>
+	<version>1.4.2-SNAPSHOT</version>
 
 	<description>
 		Execute R scripts on AKTIN data
@@ -13,11 +13,10 @@
 		visualisations
 	</description>
 
-
 	<parent>
 		<groupId>org.aktin</groupId>
 		<artifactId>aktin</artifactId>
-		<version>0.11</version>
+		<version>0.12</version>
 	</parent>
 	<properties>
 		<project.scm.id>github.com</project.scm.id>
@@ -53,7 +52,7 @@
 	<licenses>
 		<license>
 			<name>Apache License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
 			<distribution>repo</distribution>
 			<comments>A business-friendly OSS license</comments>
 		</license>
