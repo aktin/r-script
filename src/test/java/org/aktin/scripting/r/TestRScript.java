@@ -24,7 +24,8 @@ public class TestRScript {
 			"C:\\Program Files\\R\\R-3.6.2\\bin\\Rscript.exe",
 			"C:\\Program Files\\R\\R-3.6.3\\bin\\Rscript.exe",
 			"C:\\Program Files\\R\\R-3.6.3\\bin\\Rscript.exe",
-			"C:\\Program Files\\R\\R-4.0.0\\bin\\Rscript.exe"
+			"C:\\Program Files\\R\\R-4.0.0\\bin\\Rscript.exe",
+			"/usr/bin/Rscript"
 			// TODO add search paths for compilation on Linux
 	};
 	public static Path findR(){
