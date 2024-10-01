@@ -16,7 +16,7 @@
 	<parent>
 		<groupId>org.aktin</groupId>
 		<artifactId>aktin</artifactId>
-		<version>0.12</version>
+		<version>${revision}</version>
 	</parent>
 	<properties>
 		<project.scm.id>github.com</project.scm.id>
