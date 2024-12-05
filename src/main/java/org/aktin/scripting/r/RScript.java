@@ -190,7 +190,7 @@ public class RScript {
 	 *   For exit code and STDERR output see {@link AbnormalTerminationException}.
 	 */
 	public void runRscript(Path workingDir, String mainScript, Integer waitMillis) throws IOException, TimeoutException, AbnormalTerminationException {
-		ProcessBuilder pb = new ProcessBuilder(rScriptExecutable.toString(), "--vanilla", mainScript);
+		ProcessBuilder pb = new ProcessBuilder(rScriptExecutable.toString(), "--vanilla", "--encoding='UTF-8'", mainScript);
 		pb.directory(workingDir.toFile());
 		log.info(pb.command().toString());
 
